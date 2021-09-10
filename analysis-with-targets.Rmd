@@ -25,7 +25,7 @@ tar_load(model_ipw)
 
 ```{r}
 ggplot(net_data, aes(x = malaria_risk)) +
-  geom_histogram(binwidth = 5)
+  geom_histogram(binwidth = 5, boundary = 0, color = "white")
 ```
 
 
