@@ -1,3 +1,4 @@
 _targets/*
 .Rproj.user/*
 *.html
+.Rproj.user
