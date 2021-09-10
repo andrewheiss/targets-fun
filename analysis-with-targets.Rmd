@@ -1,0 +1,48 @@
+---
+title: "Mosquito nets and IPW example"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libraries-data, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(targets)
+library(broom)
+library(scales)
+library(modelsummary)
+
+tar_load(net_data)
+model_naive <- tar_read(model_naive)
+tar_load(model_ipw)
+```
+
+# Neat graph
+
+```{r}
+ggplot(net_data, aes(x = malaria_risk)) +
+  geom_histogram(binwidth = 5)
+```
+
+
+# Show results
+
+```{r coef-plot, fig.width=7, fig.height=4.5}
+coefs_to_plot <- tibble(model_name = c("Naive model", "Model adjusted with IPW"),
+                        model = list(model_naive, model_ipw)) %>% 
+  mutate(tidied = map(model, ~tidy(., conf.int = TRUE))) %>% 
+  unnest(tidied) %>% 
+  filter(term != "(Intercept)")
+
+ggplot(coefs_to_plot, aes(x = estimate, y = model_name)) +
+  geom_vline(xintercept = -10, color = "red") +
+  geom_pointrange(aes(xmin = conf.low, xmax = conf.high))
+```
+
+```{r show-table}
+modelsummary(list("Naive" = model_naive, "IPW" = model_ipw))
+```
