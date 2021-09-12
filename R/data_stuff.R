@@ -32,7 +32,7 @@ create_mosquito_data <- function() {
   # https://stats.stackexchange.com/q/153166/3025
   sigma <- as.matrix(Matrix::nearPD(cov_matrix_confounders)$mat)
   
-  num <- 3000
+  num <- 4000
   
   set.seed(123)
   confounders <- tmvtnorm::rtmvnorm(num, mean = mu, sigma = sigma,
