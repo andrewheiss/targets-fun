@@ -16,12 +16,10 @@ term_data <- tribble(
 ###### help needed for this part!
 
 term_clean <- term_data %>% 
+  mutate(term_limit_raw = parse_number(term_in_cn)) %>% 
   mutate(term_limit = case_when(
-    str_detect(term_in_cn, "年") ~ parse_number(term_in_cn),
-    str_detect(term_in_cn, "月") ~ parse_number(term_in_cn)/12,
-    TRUE ~ NA
-    #or someway to say any text that has no number in it
-  ))
+    str_detect(term_in_cn, "月") ~ term_limit_raw / 12,
+    TRUE ~ term_limit_raw))
   
 # data regarding registration location and level 
 # register means the authority that the charitable trusts are registered with 
@@ -47,5 +45,4 @@ location_clean <- location_data %>%
                                "Henan" = "Zhengzhou",
                                "Sichuan" = "Chengdu"))
 
-## maybe it's more efficient to take advantage of built-in columns in the China map data
-## and use "*_join" functions?
+
